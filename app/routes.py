@@ -32,12 +32,10 @@ selectors = {
 }
 
 @app.route('/')
-@app.route('/index')
-@app.route('/index/<name>')
-def index(name="Hello World"):
-    return render_template("index.html.jinja", text=name)
+def index():
+    return render_template("index.html.jinja")
 
-@app.route('/extract/', methods=["POST","GET"])
+@app.route('/extract', methods=["POST", "GET"])
 def extract():
     if request.method == "POST":
         product_id = request.form.get("product_id")
