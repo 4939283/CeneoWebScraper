@@ -1,12 +1,12 @@
 {% extends "base.html.jinja" %}
 {% block content %}
-	<form class="row g-3" action="{{url_for('extract')}}" method="POST">
-	<div class="col-auto">
-		<label for="product_id" class="form-label">kod produktu</label>
-		<input type="text" class="form-control-plaintext" id="product_id" name="product_id" placeholder="Podaj kod produktu z Ceneo.pl">
-	</div>
-	<div class="col-auto d-flex align-items-end">
-		<button type="submit" class="d-flex justify-content-center btn btn-info btn-lg mb-2" value="Pobierz">
-	</div> 
-	</form>
+    <form action="{{url_for('extract')}}" method="POST">
+        <div class="mb-3">
+            <label for="product_id" class="form-label">Kod produktu</label>
+            <input type="text" class="form-control-plaintext" id="product_id" name="product_id" placeholder="Podaj kod produktu z Ceneo.pl">
+        </div>
+        <div class="mb-3">
+            <input type="submit" class="btn btn-info mb-3" value="Pobierz">
+        </div>
+    </form>
 {% endblock %}
