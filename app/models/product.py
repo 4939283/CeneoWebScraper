@@ -7,6 +7,9 @@ from bs4 import BeautifulSoup
 from app.utils import get_item
 from app.models.opinion import Opinion
 from matplotlib import pyplot as plt
+from numpyencoder import NumpyEncoder
+
+plt.switch_backend('Agg') 
 
 class Product:
     def __init__(self, product_id=0, opinions=[], product_name="", opinions_count=0, pros_count=0, cons_count=0, average_score=0):
@@ -72,30 +75,30 @@ class Product:
                 url = None
         return self
     
-    def opinions_do_df(self):
+    def opinions_to_df(self):
         opinions = pd.read_json(json.dumps([opinion.to_dict() for opinion in self.opinions]))
         opinions.stars = opinions.stars.map(lambda x: float(x.split("/")[0].replace(",", ".")))
         return opinions
     
     def process_stats(self):
-        self.opinions_count = self.opinions_do_df().shape[0],
-        self.pros_count = self.opinions_do_df().pros.map(bool).sum()
-        self.cons_count = self.opinions_do_df().cons.map(bool).sum()
-        self.average_score = self.opinions_do_df().stars.mean().round(2)
+        self.opinions_count = self.opinions_to_df().shape[0]
+        self.pros_count = self.opinions_to_df().pros.map(bool).sum()
+        self.cons_count = self.opinions_to_df().cons.map(bool).sum()
+        self.average_score = self.opinions_to_df().stars.mean().round(2)
         return self
 
     def draw_charts(self): 
-        recommendation = self.opinions_do_df().recommendation.value_counts(dropna = False).sort_index().reindex(["Nie polecam", "Polecam", None])
+        recommendation = self.opinions_to_df().recommendation.value_counts(dropna = False).sort_index().reindex(["Nie polecam", "Polecam", None])
         recommendation.plot.pie(
             label="", 
             autopct="%1.1f%%", 
-            colors=["crimson", "forestgreen", "lightskyblue"],
+            colors=["lightsalmon", "lightgreen", "lightskyblue"],
             labels=["Nie polecam", "Polecam", "Nie mam zdania"]
         )
         plt.title("Rekomendacja")
         plt.savefig(f"app/static/plots/{self.product_id}_recommendations.png")
         plt.close()
-        stars = self.opinions_do_df().stars.value_counts().sort_index().reindex(list(np.arange(0,5.5,0.5)), fill_value=0)
+        stars = self.opinions_to_df().stars.value_counts().sort_index().reindex([x / 10.0 for x in range(5, 50, 5)], fill_value=0)
         stars.plot.bar()
         plt.title("Oceny produktu")
         plt.xlabel("Liczba gwiazdek")
@@ -115,8 +118,10 @@ class Product:
         if not os.path.exists("app/products"):
             os.makedirs("app/products")
         with open(f"app/products/{self.product_id}.json", "w", encoding="UTF-8") as jf:
-            json.dump(self.stats_to_dict(), jf, indent=4, ensure_ascii=False)
-
+            json.dump(self.stats_to_dict(), jf, indent=4,sort_keys=True,
+              separators=(', ', ': '), ensure_ascii=False,
+              cls=NumpyEncoder)
+              
     def read_from_json(self):
         with open(f"app/products/{self.product_id}.json", "r", encoding="UTF-8") as jf:
             product = json.load(jf)
@@ -130,4 +135,3 @@ class Product:
             opinions = json.load(jf)
         for opinion in opinions:
             self.opinions.append(Opinion(**opinion))
-        

@@ -1,13 +1,31 @@
 {% extends "base.html.jinja" %}
 {% block content %}
     <h2>Lista produktów</h2>
-    <ul class="list-group">
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Nazwa produktu</th>
+                <th scope="col">ID produktu</th>
+                <th scope="col">Liczba opinii</th>
+                <th scope="col">Średnia ocena</th>
+            </tr>
+        </thead>
+
+        <tbody>
         {% for product in products %}
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-                <a class="nav-link" href="{{url_for('product', product_id=product)}}"><i class="bi bi-door-open-fill"></i>
- {{product}}</a>
-                <span class="badge bg-primary rounded-pill">{{loop.index}}</span>
-            </li>
+        <a class="nav-link" href="{{url_for('product', product_id=product.product_id)}}">
+            <tr>
+                <th scope="row">{{loop.index}}</th>
+                <td>{{product.product_name}}</td>
+                <td>{{product.product_id}}</td>
+                <td>{{product.opinions_count}}</td>
+                <td>{{product.average_score}}</td>
+            </tr>
+        </a>
         {% endfor %}
-    </ul>
+        </tbody>
+    </table>
+
 {% endblock %}
