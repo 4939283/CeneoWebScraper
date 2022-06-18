@@ -1,6 +1,13 @@
 {% extends "base.html.jinja" %}
 {% block content %}
 
-    <p>{{text}}</p>
+<p class="mb-0 fw-bold fs-1">CENEOWEBSCRAPER</p>
+<div class="hl m-4"></div>
+<p class="mb-0 fs-5">To aplikacja webowa służąca pobieraniu opinii z serwisu Ceneo.pl oraz tworzenia statystyk na ich podstawie.</p>
+<p class="mb-0 fs-5">Znając selektory i ich zastosowanie w kodzie serwisu, aplikacja potrafi oddzielać od siebie i porządkować poszczególne elementy<br> recenzji (np. autor, treść, ocena) i zapisywać je jako słownik pythona do formatu JSON oraz tworzyć graficzne zestawienia.</p>
+<p class="mb-0 fs-5">Zastosowane biblioteki to m.in. Flask, BeautifulSoup, requests, matplotlib, pandas, datatables,js, sorttable.js .</p>
+<div class="hl m-4"></div>
+<p class="fw-bold mb-0 fs-5">Ewolucja zastosowanych podejść:</p>
+<p class="fst-italic fs-4">strukturalne ➝ proceduralne ➝ obiektowe</p>
 
 {% endblock %}

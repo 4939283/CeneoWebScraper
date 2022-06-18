@@ -1,31 +1,38 @@
 {% extends "base.html.jinja" %}
 {% block content %}
-    <h2>Lista produktów</h2>
 
-    <table class="table">
+    <p class="mb-0 fw-bold fs-1">LISTA PRODUKTÓW</p>
+    <div class="hl m-4"></div>
+    <div class="container w-80 mt-4">
+    <table class="table table-bordered">
+
         <thead>
             <tr>
                 <th scope="col">#</th>
                 <th scope="col">Nazwa produktu</th>
-                <th scope="col">ID produktu</th>
                 <th scope="col">Liczba opinii</th>
+                <th scope="col">Liczba zalet</th>
+                <th scope="col">Liczba wad</th>
                 <th scope="col">Średnia ocena</th>
+                <th scope="col">Pobierz opinie</th>
             </tr>
         </thead>
 
-        <tbody>
         {% for product in products %}
-        <a class="nav-link" href="{{url_for('product', product_id=product.product_id)}}">
+
             <tr>
                 <th scope="row">{{loop.index}}</th>
-                <td>{{product.product_name}}</td>
-                <td>{{product.product_id}}</td>
-                <td>{{product.opinions_count}}</td>
-                <td>{{product.average_score}}</td>
+                <td class="text-center"><a href="{{url_for('product', product_id=product.product_id)}}">{{product.product_name}}</a></td>
+                <td class="text-center"><a href="{{url_for('product', product_id=product.product_id)}}">{{product.opinions_count}}</a></td>
+                <td class="text-center"><a href="{{url_for('product', product_id=product.product_id)}}">{{product.pros_count}}</a></td>
+                <td class="text-center"><a href="{{url_for('product', product_id=product.product_id)}}">{{product.cons_count}}</a></td>
+                <td class="text-center"><a href="{{url_for('product', product_id=product.product_id)}}">{{product.average_score}}</a></td>
+                <td class="text-center"><a href="{{url_for('download_json', product_id=product.product_id)}}">JSON</a></td>
             </tr>
-        </a>
+
         {% endfor %}
-        </tbody>
+
     </table>
+    </div>
 
 {% endblock %}

@@ -1,28 +1,151 @@
 {% extends "base.html.jinja" %}
 {% block content %}
-    <ul class="list-group">
-    <h1>Dane o produkcie</h1>
-    {% for key, value in stats.items() %}
-        <li class="list-group-item d-flex justify-content-between align-items-center">
-            {{key}}
-            <span class="badge rounded-pill" style="background-color: #CCCCFF">{{value}}</span>
-        </li>
-    {% endfor %}
-    </ul>
-    <div class="container">
-        <div class="row">
-            <div class="col">
-                <img src="/static/plots/{{product_id}}_recommendations.png" class="rounded mx-auto d-block" alt="Recommendation">
-            </div>
-            <div class="col">
-                <img src="/static/plots/{{product_id}}_stars.png" class="rounded mx-auto d-block" alt="Stars">
-            </div>
-        </div>
-    </div>
 
-{% for table in opinions_tables %}
-            {{opinions_titles[loop.index]}}
-            {{ table|safe }}
-{% endfor %}
+<p class="mb-0 fw-bold fs-1">DANE O PRODUKCIE</p>
+<div class="hl m-4"></div>
+
+<ul class="list-group">
+
+<ul class="list-group list-group-horizontal">
+  <li class="list-group-item list-group-item-heading"><p class="mb-0 fs-5">Nazwa produktu:</p></li>
+  <li class="list-group-item list-group-item-content"><p class="mb-0 fs-5">{{stats["product_name"]}}</p></li>
+</ul>
+
+<ul class="list-group list-group-horizontal">
+  <li class="list-group-item list-group-item-heading"><p class="mb-0 fs-5">ID produktu:</p></li>
+  <li class="list-group-item list-group-item-content"><p class="mb-0 fs-5">{{stats["product_id"]}}</p></li>
+</ul>
+
+<ul class="list-group list-group-horizontal">
+  <li class="list-group-item list-group-item-heading"><p class="mb-0 fs-5">Liczba opinii:</p></li>
+  <li class="list-group-item list-group-item-content"><p class="mb-0 fs-5">{{stats["opinions_count"]}}</p></li>
+</ul>
+
+<ul class="list-group list-group-horizontal">
+  <li class="list-group-item list-group-item-heading"><p class="mb-0 fs-5">Zalety:</p></li>
+  <li class="list-group-item list-group-item-content"><p class="mb-0 fs-5">{{stats["pros_count"]}}</p></li>
+</ul>
+
+<ul class="list-group list-group-horizontal">
+  <li class="list-group-item list-group-item-heading"><p class="mb-0 fs-5">Wady:</p></li>
+  <li class="list-group-item list-group-item-content"><p class="mb-0 fs-5">{{stats["cons_count"]}}</p></li>
+</ul>
+
+<ul class="list-group list-group-horizontal">
+  <li class="list-group-item list-group-item-heading"><p class="mb-0 fs-5">Średnia ocena:</p></li>
+  <li class="list-group-item list-group-item-content"><p class="mb-0 fs-5">{{stats["average_score"]}}</p></li>
+</ul>
+
+</ul>
+
+<div class="py-5">
+<a href="{{ url_for('charts', product_id=product_id)}}"><div class="btn btn-extract w-40 btn-lg"><b>WYKRESY</b></div></a>
+<a href="{{url_for('download_json', product_id=product_id)}}"><div class="btn btn-extract w-40 btn-lg"><b>POBIERZ OPINIE</b></div></a>
+</div>
+
+<p class="mb-0 fw-bold fs-1">OPINIE</p>
+<div class="hl m-4"></div>
+
+
+<div class="container mt-4">
+<table id="example" class="table table-bordered sortable display">
+
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">ID opinii</th>
+            <th scope="col">Autor</th>
+            <th scope="col">Rekomendacja</th>
+            <th scope="col">Gwiazdki</th>
+            <th scope="col">Treść</th>
+            <th scope="col">Za</th>
+            <th scope="col">Przeciw</th>
+            <th scope="col">Data publikacji</th>
+            <th scope="col">Data zakupu</th>
+            <th scope="col">Zalety</th>
+            <th scope="col">Wady</th>
+        </tr>
+    </thead>
+
+    {% for opinion in opinions %}
+
+    <tr>
+        <th scope="row">{{loop.index}}</th>
+        <td>{{opinion["opinion_id"]}}</td>
+        <td>{{opinion["author"]}}</td>
+        <td>{{opinion["recommendation"]}}</td>
+        <td>{{opinion["stars"]}}</td>
+        <td>{{opinion["content"]}}</td>
+        <td>{{opinion["useful"]}}</td>
+        <td>{{opinion["useless"]}}</td>
+        <td>{{opinion["publish_date"]}}</td>
+        <td>{{opinion["purchase_date"]}}</td>
+        <td>{{opinion["pros"]}}</td>
+        <td>{{opinion["cons"]}}</td>
+    </tr>
+
+    {% endfor %}
+</table>
+
+<script>
+$(document).ready(function () {
+    $('#example thead tr')
+        .clone(true)
+        .addClass('filters')
+        .appendTo('#example thead');
+ 
+    var table = $('#example').DataTable({
+        paging: false,
+        ordering: false,
+        info: false,
+        orderCellsTop: true,
+        fixedHeader: true,
+        initComplete: function () {
+            var api = this.api();
+ 
+            api
+                .columns()
+                .eq(0)
+                .each(function (colIdx) {
+                    var cell = $('.filters th').eq(
+                        $(api.column(colIdx).header()).index()
+                    );
+                    var title = $(cell).text();
+                    $(cell).html('<input type="text" placeholder="" />');
+                    $(
+                        'input',
+                        $('.filters th').eq($(api.column(colIdx).header()).index())
+                    )
+                        .off('keyup change')
+                        .on('change', function (e) {
+                            $(this).attr('title', $(this).val());
+                            var regexr = '({search})';
+ 
+                            var cursorPosition = this.selectionStart;
+                            api
+                                .column(colIdx)
+                                .search(
+                                    this.value != ''
+                                        ? regexr.replace('{search}', '(((' + this.value + ')))')
+                                        : '',
+                                    this.value != '',
+                                    this.value == ''
+                                )
+                                .draw();
+                        })
+                        .on('keyup', function (e) {
+                            e.stopPropagation();
+ 
+                            $(this).trigger('change');
+                            $(this)
+                                .focus()[0]
+                                .setSelectionRange(cursorPosition, cursorPosition);
+                        });
+                });
+        },
+    });
+});
+</script>
+</div>
 
 {% endblock %}

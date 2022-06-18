@@ -1,0 +1,20 @@
+{% extends "base.html.jinja" %}
+{% block content %}
+
+<p class="mb-0 fw-bold fs-1">WYKRESY</p>
+<div class="hl m-4"></div>
+
+<div class="mb-5">
+    <div class="row">
+        <div class="col">
+            <img src="/static/plots/{{product_id}}_recommendations.png" class="rounded mx-auto d-block" alt="Recommendation">
+        </div>
+        <div class="col">
+            <img src="/static/plots/{{product_id}}_stars.png" class="rounded mx-auto d-block" alt="Stars">
+        </div>
+    </div>
+</div>
+
+<a href="{{url_for('product', product_id=product_id)}}"><div class="btn btn-extract w-40 btn-lg my-5"><b>POWRÓT</b></div></a>
+
+{% endblock %}

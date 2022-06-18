@@ -1,53 +1,47 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta charset="UTF-8">
-        <title>Ceneo Web Scraper</title>
-        <!-- CSS only -->
+        <meta charset="utf-8" />
+        <title>CeneoWebScraper</title>
+        <link rel="icon" type="image/x-icon" href="static/favicon.ico"/>
+        <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet" type="text/css"/>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css">
-        <!-- JavaScript Bundle with Popper -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Maven+Pro:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs5/jq-3.6.0/dt-1.12.1/datatables.min.css"/>
+        <script type="text/javascript" src="https://cdn.datatables.net/v/bs5/jq-3.6.0/dt-1.12.1/datatables.min.js"></script>
+        <script src="https://www.kryogenix.org/code/browser/sorttable/sorttable.js"></script>
     </head>
-    <body>
-        <header class="container text-center">
-            <h1 class="display-1">Ceneo Web Scraper</h1>
-        </header>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark container">
-            <div class="container-fluid">
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{url_for('index')}}"><i class="bi bi-house-fill"></i> Strona główna</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{url_for('extract')}}"><i class="bi bi-cloud-download-fill"></i>
- Pobierz produkt</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{url_for('products')}}"><i class="bi bi-list-stars"></i> Lista produktów</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{url_for('author')}}"><i class="bi bi-person-circle"></i> O autorze</a>
-                        </li>
+
+    <body class="d-flex flex-column min-vh-100">
+
+        <nav class="navbar bg-gray navbar-expand-lg fixed-top py-3">
+            <div class="container fw-bold">
+                <a class="navbar-logo fs-2 text-white fw-bolder zoom" href="{{url_for('index')}}">CENEOWEBSCRAPER</a>
+                <div>
+                    <ul class="navbar-nav">
+                        <li class="nav-item"><a class="nav-link py-3 px-0 px-lg-3 text-white fs-5 zoom" href="{{url_for('extract')}}">POBIERZ PRODUKT</a></li>
+                        <li class="nav-item"><a class="nav-link py-3 px-0 px-lg-3 text-white fs-5 zoom" href="{{url_for('products')}}">LISTA PRODUKTÓW</a></li>
+                        <li class="nav-item"><a class="nav-link py-3 px-0 px-lg-3 text-white fs-5 zoom" href="{{url_for('author')}}">O AUTORZE</a></li>
                     </ul>
                 </div>
             </div>
         </nav>
-        <div class="container">
-            <div class="row">
-                <div class="col-3">
 
-                </div>
-                <div class="col">
+        <header class="text-black">
+            <div class="d-flex align-items-center flex-column">
+
                 {% block content %}
                     <p>base.html.jinja</p>
                 {% endblock content %}
-                </div>
+
             </div>
-        </div>
-        <footer class="container bg-dark text-secondary fixed-bottom text-center">
-            <p>&copy; Wojciech Bartoszek Uniwersytet Ekonomiczny w Tarnowie</p>
+        </header>
+
+        <footer class="copyright bg-gray py-4 text-center text-white mt-auto fw-normal">
+        Wojciech Bartoszek &copy; Uniwersytet Ekonomiczny w Krakowie
         </footer>
 
     </body>
