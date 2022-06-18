@@ -28,6 +28,8 @@ def extract():
 
 @app.route('/products')
 def products():
+    if not os.path.exists("app/opinions"):
+        os.makedirs("app/opinions")
     products = [filename.split(".")[0] for filename in os.listdir("app/opinions")]
     for i in range(0, len(products)):
         products[i] = Product(products[i])
